@@ -15,8 +15,8 @@ var socky = (function(){
     };
     ws.onmessage = function(event){
         var data = event.data.split("\n");
-        var path = data[0];
-        var content = data[1];
+        var path = data.shift();
+        var content = data.join("\n");
         var waiters = waiting[path]
         waiters.forEach(function(id){
             replace(id, content);
@@ -27,9 +27,19 @@ var socky = (function(){
     
     function replace(id, content){
         var elm = document.getElementById(id);
-        var img = document.createElement('img');
-        img.src = 'data:;base64,'+content;
-        elm.parentNode.replaceChild(img, elm);
+        if(id.indexOf('__img__') == 0){
+            var img = document.createElement('img');
+            img.src = 'data:;base64,'+content;
+            elm.parentNode.replaceChild(img, elm);
+        }else if(id.indexOf('__style__') == 0){
+            var style = document.createElement('style');
+            style.textContent = content;
+            elm.parentNode.replaceChild(style, elm);
+        }else if(id.indexOf('__script__') == 0){
+            var script = document.createElement('script');
+            script.textContent = content;
+            elm.parentNode.replaceChild(script, elm);
+        }
     }
 
     function request(path, id){

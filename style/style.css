@@ -1,0 +1,12 @@
+h1{
+    text-align: center;
+}
+
+div.wrapper{
+    width: 500px;
+    margin: 0 auto;
+}
+
+img{
+    display: block;
+}

@@ -19,8 +19,8 @@ var socky = (function(){
     };
     ws.onmessage = function(event){
         var data = event.data.split("\n");
-        var path = data[0];
-        var content = data[1];
+        var path = data.shift();
+        var content = data.join("\n");
         var waiters = waiting[path]
         waiters.forEach(function(id){
             replace(id, content);
@@ -31,9 +31,19 @@ var socky = (function(){
     
     function replace(id, content){
         var elm = document.getElementById(id);
-        var img = document.createElement('img');
-        img.src = 'data:;base64,'+content;
-        elm.parentNode.replaceChild(img, elm);
+        if(id.indexOf('__img__') == 0){
+            var img = document.createElement('img');
+            img.src = 'data:;base64,'+content;
+            elm.parentNode.replaceChild(img, elm);
+        }else if(id.indexOf('__style__') == 0){
+            var style = document.createElement('style');
+            style.textContent = content;
+            elm.parentNode.replaceChild(style, elm);
+        }else if(id.indexOf('__script__') == 0){
+            var script = document.createElement('script');
+            script.textContent = content;
+            elm.parentNode.replaceChild(script, elm);
+        }
     }
 
     function request(path, id){
@@ -54,15 +64,18 @@ var socky = (function(){
     return request;
 })();
 </script>
+        <script id="__style__0">socky("style/style.css", "__style__0")</script>
     </head>
     <body>
+        <div class="wrapper">
+            <h1>Cats</h1>
 
-        <h1>hello</h1>
-
-        <script id="__img__0">socky("img.png", "__img__0")</script>
-
-        <b>test</b>
-        <script id="__img__1">socky("img.png", "__img__1")</script>
-
+            <script id="__img__1">socky("images/catdad.jpg", "__img__1")</script>
+            
+            <script id="__img__2">socky("images/cat.jpg", "__img__2")</script>
+            
+            <script id="__img__3">socky("images/kitten.jpg", "__img__3")</script>
+        </div>
+        <script id="__script__4">socky("script/test.js", "__script__4")</script>
     </body>
-</html><img <img 
+</html>

@@ -5,15 +5,34 @@ var fs = require('fs');
 var tr = trumpet();
 
 
-var imgCount = 0;
-
-fs.createReadStream(__dirname + '/socky.part').pipe(tr.select('script[src=socky]').createWriteStream({ outer:true }));
+var elmCount = 0;
 
 tr.selectAll('img', function (img) {
     var ws = img.createWriteStream({ outer:true });
     var src = img.attributes.SRC;
-    var id = '__img__'+(imgCount++);
+    var id = '__img__'+(elmCount++);
     ws.end('<script id="'+id+'">socky("'+src+'", "'+id+'")</script>');
+});
+
+tr.selectAll('script', function (script) {
+    if(script.attributes.SRC == 'socky') return;
+
+    var ws = script.createWriteStream({ outer:true });
+    var src = script.attributes.SRC;
+    var id = '__script__'+(elmCount++);
+    ws.end('<script id="'+id+'">socky("'+src+'", "'+id+'")</script>');
+});
+
+tr.selectAll('link[rel=stylesheet]', function (style) {
+    var ws = style.createWriteStream({ outer:true });
+    var src = style.attributes.HREF;
+    var id = '__style__'+(elmCount++);
+    ws.end('<script id="'+id+'">socky("'+src+'", "'+id+'")</script>');
+});
+
+tr.selectAll('script[src=socky]', function(socky){
+    var ws = socky.createWriteStream({ outer:true })
+    fs.createReadStream(__dirname + '/socky.part').pipe(ws);
 });
 
 var src = fs.createReadStream(__dirname + '/src/index.html');
