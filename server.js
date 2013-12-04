@@ -4,7 +4,7 @@ var http = require('http');
 
 var server = http.createServer(function(request, response){
     response.writeHead(200);
-    fs.readFile('index.html', function(err, file){
+    fs.readFile(__dirname+'/dst/index.html', function(err, file){
         response.write(file, 'binary');
         response.end();
     });

@@ -1,0 +1,68 @@
+<!doctype html>
+
+<html>
+    <head>
+        <script>
+var socky = (function(){
+    
+    var toSend = [];
+
+    var waiting = {};
+    var cache = {};
+
+    var ws = new WebSocket('ws://localhost');
+    ws.onopen = function(){
+        toSend.forEach(function(path){
+            ws.send(path);
+        });
+        toSend = [];
+    };
+    ws.onmessage = function(event){
+        var data = event.data.split("\n");
+        var path = data[0];
+        var content = data[1];
+        var waiters = waiting[path]
+        waiters.forEach(function(id){
+            replace(id, content);
+        });
+        waiters = [];
+        cache[path] = content;
+    };
+    
+    function replace(id, content){
+        var elm = document.getElementById(id);
+        var img = document.createElement('img');
+        img.src = 'data:;base64,'+content;
+        elm.parentNode.replaceChild(img, elm);
+    }
+
+    function request(path, id){
+        if(path in cache){
+            replace(id, cache[path]);
+        }else if(path in waiting){
+            waiting[path].push(id)
+        }else{
+            waiting[path] = [id];
+            if(ws.open){
+                ws.send(path);
+            }else{
+                toSend.push(path);
+            }
+        }
+    }
+
+    return request;
+})();
+</script>
+    </head>
+    <body>
+
+        <h1>hello</h1>
+
+        <script id="__img__0">socky("img.png", "__img__0")</script>
+
+        <b>test</b>
+        <script id="__img__1">socky("img.png", "__img__1")</script>
+
+    </body>
+</html><img <img 

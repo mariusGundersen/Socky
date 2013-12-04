@@ -1,4 +1,3 @@
-<h1>hello</h1>
 <script>
 var socky = (function(){
     
@@ -50,12 +49,4 @@ var socky = (function(){
 
     return request;
 })();
-
-</script>
-
-<script id="__img__1234">
-socky('img.png', '__img__1234');
-</script>
-<script id="__img__1235">
-socky('img.png', '__img__1235');
 </script>

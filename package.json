@@ -1,0 +1,21 @@
+{
+  "name": "Socky",
+  "version": "0.0.1",
+  "description": "download images over websocket",
+  "main": "server.js",
+  "dependencies": {
+    "websocket": "~1.0.8",
+    "htmlparser2": "~3.3.0",
+    "trumpet": "~1.6.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "sockets"
+  ],
+  "author": "Marius Gundersen",
+  "license": "BSD"
+}
